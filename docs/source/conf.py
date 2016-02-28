@@ -14,11 +14,12 @@
 
 import sys
 import os
+from unittest.mock import MagicMock
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../../angr/'))
 
 # -- General configuration ------------------------------------------------
 
@@ -108,6 +109,16 @@ todo_include_todos = False
 intersphinx_mapping = {'python': ('https://docs.python.org/2.7', None)}
 
 autoclass_content = "both"
+
+# -- Mock modules that require static libraries ---------------------------
+# This is needed to build on readthedocs.org
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+            return Mock()
+
+MOCK_MODULES = ['capstone']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Options for HTML output ----------------------------------------------
 
